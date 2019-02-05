@@ -4,7 +4,8 @@ var token = "",
 	lastAttack = [ -1, -1 ],
 	tempAttack = [ -1, -1 ],
 	lastUpdate,
-	attacking = false;
+	attacking = false,
+	mode = "";
 
 function GetCell( x, y ) {
 	if( x >= 0 && y >= 0 && x < 30 && y < 30 ) {
@@ -34,15 +35,39 @@ function Attack( x, y, boost = false ) {
 	}
 }
 
+function ExampleAI() {
+	var c,
+		d,
+		cc,
+		adjacent = [];
+	for( var x = 0; x < 30; x++ ) {
+		for( var y = 0; y < 30; y++ ) {
+			c = data[ "cells" ][ 30 * y + x ];
+			if( c[ "o" ] == uid ) {
+				d = [[0,-1],[1,0],[0,1],[-1,0]][Math.floor( Math.random() * 4 )];
+				cc = GetCell( x + d[ 0 ], y + d[ 1 ] );
+				if( cc != null && cc[ "o" ] != uid && x + d[ 0 ] != lastAttack[ 0 ] && y + d[ 1 ] != lastAttack[ 1 ] ) {
+					Attack( x + d[ 0 ], y + d[ 1 ] );
+				}
+			}
+		}
+	}	
+}
+
+function GameLoop() {
+	switch( mode ) {
+		default:
+			ExampleAI();
+			break;
+	}	
+}
+
 function Refresh() {
 	var xhr = new XMLHttpRequest();
 	xhr.open( "POST", "https://colorfight.herokuapp.com/getgameinfo" );
 	xhr.setRequestHeader( "Content-Type", "application/json;charset=UTF-8" );
 	xhr.onreadystatechange = function() {
 		if( this.readyState == XMLHttpRequest.DONE && this.status == 200 ) {
-			var c,
-				d,
-				cc;
 			if( data == null ) {
 				data = JSON.parse( this.responseText );
 			} else {
@@ -53,18 +78,7 @@ function Refresh() {
 				}
 			}
 			lastUpdate = data[ "info" ][ "time" ];
-			for( var x = 0; x < 30; x++ ) {
-				for( var y = 0; y < 30; y++ ) {
-					c = data[ "cells" ][ 30 * y + x ];
-					if( c[ "o" ] == uid ) {
-						d = [[0,-1],[1,0],[0,1],[-1,0]][Math.floor( Math.random() * 4 )];
-						cc = GetCell( x + d[ 0 ], y + d[ 1 ] );
-						if( cc != null && cc[ "o" ] != uid && x + d[ 0 ] != lastAttack[ 0 ] && y + d[ 1 ] != lastAttack[ 1 ] ) {
-							Attack( x + d[ 0 ], y + d[ 1 ] );
-						}
-					}
-				}
-			}
+			GameLoop();
 			Refresh();
 		}
 	}
@@ -90,4 +104,11 @@ function JoinGame( name ) {
 	xhr.send( JSON.stringify( { "name" : name } ) );
 }
 
-JoinGame( "MyAI" );
+var name_input = document.getElementById( "name_input" ),
+	join_button = document.getElementById( "join_button" );
+
+join_button.addEventListener( "click", function() {
+	if( name_input.value.trim() != "" ) {
+		JoinGame( name_input.value.trim() );
+	}
+} );
