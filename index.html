@@ -6,19 +6,30 @@
 		<h1>Colorfight-JS</h1>
 		<h2>A JavaScript implementation of Colorfight, for testing different AI strategies</h2>
 		<h3>Step 1: Learn about the different AI frameworks</h3>
-		<span>ExampleAI: </span>
+		<h4>ExampleAI</h4>
+		<span>Specialty: Nothing</span>
+		<br />
 		<span>Randomly attack any adjacent cells</span>
 		<br />
-		<span>ExampleAI+: </span>
+		<h4>ExampleAI+</h4>
+		<span>Specialty: Expansion</span>
+		<br />
 		<span>Pick a random cell, then evaluate (based on time) if it should be attacked</span>
 		<br />
-		<span>XJ-9: </span>
+		<h4>XJ-9</h4>
+		<span>Specialty: Defense</span>
+		<br />
+		<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
+		<h4>AgniKai</h4>
+		<span>Specialty: Attack</span>
+		<br />
 		<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
 		<!-- DO NOT MODIFY THE ID ATTRIBUTE OF THESE -->
 		<h3>Step 2: Select an AI framework for your bot</h3>
 		<select>
 			<option value="exampleAI">ExampleAI</option>
 			<option value="exampleAIPlus">ExampleAI+</option>
+			<option value="exJayNine">XJ-9</option>
 			<option value="exJayNine">XJ-9</option>
 		</select>
 		<br />
@@ -33,6 +44,7 @@
 		<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
 		<br />
 		<h4>XJ-9</h4>
+		<h4>AgniKai</h4>
 		<h3>Step 4: Join the game with your AI</h3>
 		<input type="text" placeholder="Enter name..." id="name_input" />
 		<button id="join_button">Join Game</button>
