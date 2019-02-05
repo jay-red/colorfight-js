@@ -5,21 +5,34 @@
 	<body>
 		<h1>Colorfight-JS</h1>
 		<h2>A JavaScript implementation of Colorfight, for testing different AI strategies</h2>
-		<h3>Step 1: Decide which AI mode to use</h3>
+		<h3>Step 1: Learn about the different AI frameworks</h3>
 		<span>ExampleAI: </span>
 		<span>Randomly attack any adjacent cells</span>
 		<br />
 		<span>ExampleAI+: </span>
-		<span>Pick a random cell, then evaluate if it should be attacked</span>
+		<span>Pick a random cell, then evaluate (based on time) if it should be attacked</span>
 		<br />
+		<span>XJ-9: </span>
+		<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
 		<!-- DO NOT MODIFY THE ID ATTRIBUTE OF THESE -->
-		<h3>Step 2: Select your AI mode</h3>
+		<h3>Step 2: Select an AI framework for your bot</h3>
 		<select>
 			<option value="exampleAI">ExampleAI</option>
 			<option value="exampleAIPlus">ExampleAI+</option>
+			<option value="exJayNine">XJ-9</option>
 		</select>
 		<br />
-		<h3>Step 3: Configure your strategy</h3>
+		<h3>Step 3: Configure framework for your strategy</h3>
+		<h4>ExampleAI</h4>
+		<span>Completely random. No configurations.</span>
+		<h4>ExampleAI+</h4>
+		<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
+		<br />
+		<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
+		<br />
+		<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
+		<br />
+		<h4>XJ-9</h4>
 		<h3>Step 4: Join the game with your AI</h3>
 		<input type="text" placeholder="Enter name..." id="name_input" />
 		<button id="join_button">Join Game</button>
