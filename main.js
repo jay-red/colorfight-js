@@ -3,7 +3,7 @@ var token = "",
 	data = null,
 	lastAttack = [ -1, -1 ],
 	tempAttack = [ -1, -1 ],
-	lastUpdate,
+	lastUpdate = 0,
 	attacking = false,
 	mode = "";
 
