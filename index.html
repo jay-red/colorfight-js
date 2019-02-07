@@ -24,19 +24,23 @@
 		<span>Specialty: Attack</span>
 		<br />
 		<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
-		<!-- DO NOT MODIFY THE ID ATTRIBUTE OF THESE -->
+		<!-- DO NOT MODIFY THE ID OR NAME ATTRIBUTES OF THESE -->
 		<h3>Step 2: Select an AI framework for your bot</h3>
-		<select>
+		<select id="framework_select">
 			<option value="exampleAI">ExampleAI</option>
 			<option value="exampleAIPlus">ExampleAI+</option>
 			<option value="exJayNine">XJ-9</option>
-			<option value="exJayNine">XJ-9</option>
+			<option value="exJayNine">AgniKai</option>
 		</select>
 		<br />
 		<h3>Step 3: Configure framework for your strategy</h3>
 		<h4>ExampleAI</h4>
 		<span>Completely random. No configurations.</span>
 		<h4>ExampleAI+</h4>
+		<h5>Attack Time</h5>
+		<span>ExampleAI+ picks a random cell, but will only attack it if the take time is low enough.</span>
+		<br />
+		<br />
 		<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
 		<br />
 		<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
@@ -44,6 +48,35 @@
 		<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
 		<br />
 		<h4>XJ-9</h4>
+		<h5>Attack Time</h5>
+		<span>Configure the max threshold for attack times of different types of cells</span>
+		<br />
+		<br />
+		<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
+		<br />
+		<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
+		<br />
+		<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
+		<br />
+		<h5>Blast Parameters</h5>
+		<span>XJ-9 will only blast to take high value cells from other players</span>
+		<br />
+		<br />
+		<span>Blast for gold cells?</span>
+		<br />
+		<input type="radio" id="xjgold_yes" name="xjgold" value="yes">
+		<label for="xjgold">Yes</label>
+		<input type="radio" id="xjgold_no" name="xjgold" value="no">
+		<label for="xjgold">No</label>
+		<br />
+		<span>Blast for energy cells?</span>
+		<br />
+		<input type="radio" id="xjgold_yes" name="xjenergy" value="yes">
+		<label for="xjgold">Yes</label>
+		<input type="radio" id="xjgold_no" name="xjenergy" value="no">
+		<label for="xjgold">No</label>
+		<br />
+		<h5>Attack Time </h5>
 		<h4>AgniKai</h4>
 		<h3>Step 4: Join the game with your AI</h3>
 		<input type="text" placeholder="Enter name..." id="name_input" />
