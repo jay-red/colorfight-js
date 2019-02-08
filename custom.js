@@ -8,7 +8,7 @@ var token = "",
 	playerData = {},
 	mode = "",
 	attackIndex = 0,
-	host = "https://troycolorfight.herokuapp.com/";
+	host = "https://colorfight.herokuapp.com/";
 
 function randomize( array ) {
     var currentIndex = array.length,
