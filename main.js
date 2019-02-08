@@ -112,3 +112,17 @@ join_button.addEventListener( "click", function() {
 		JoinGame( name_input.value.trim() );
 	}
 } );
+
+
+//Andrew added this function - to show the correct AI stuff
+function selectAi() {
+	//Hide all the divs
+	document.getElementById('exampleAIDiv').setAttribute("hidden", true);
+	document.getElementById('exampleAIPlusDiv').setAttribute("hidden", true);
+	document.getElementById('exJayNineDiv').setAttribute("hidden", true);
+	document.getElementById('agniKaiDiv').setAttribute("hidden", true);
+
+	//Show the correct div
+	var selected = document.getElementById('framework_select').value + "Div";
+	document.getElementById(selected).removeAttribute("hidden");
+}
