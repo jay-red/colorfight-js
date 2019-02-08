@@ -4,7 +4,7 @@
 		<link rel="stylesheet" href="index.css">
 	</head>
 	<body>
-		<iframe src="http://colorfight.herokuapp.com" height="700" width="100%"></iframe>
+		<iframe src="http://troycolorfight.herokuapp.com" height="700" width="100%"></iframe>
 		<div class="logo">
 			<div class="container">
 				<h1>
@@ -14,105 +14,123 @@
 		</div>
 		<div class="row">
 			<div class="left">
-				<h2>A JavaScript implementation of Colorfight, for testing different AI strategies</h2>
-				<hr>
+				<div class="padded">
+					<h2>A JavaScript implementation of Colorfight, for testing different AI strategies</h2>
+					<hr>
+					<!--<div id="joined">
+						<div class="container">
+							<button class="input" id="reset_button">Reset Bot</button>
+						</div>
+						<hr>
+					</div>-->
+					<h2>Select an AI framework:</h2>
+					<div class="container">
+						<select class="input" id="framework_select">
+							<option value="exampleAI">ExampleAI</option>
+							<option value="exampleAIPlus">ExampleAI+</option>
+							<option value="exJayNine">XJ-9</option>
+							<option value="jared">Jared Bot</option>
+							<option value="custom">Custom</option>
+						</select>
+					</div>
+					<hr>
 
-				<h2>Select an AI framework:</h2>
-				<div class="container">
-					<select class="input" id="framework_select" onchange="selectAi()">
-						<option value="exampleAI">ExampleAI</option>
-						<option value="exampleAIPlus">ExampleAI+</option>
-						<option value="exJayNine">XJ-9</option>
-						<option value="agniKai">AgniKai</option>
-					</select>
-				</div>
-				<hr>
+					<div id="exampleAIDiv">
+						<h1>ExampleAI</h1>
+						<h2>Specialty: Nothing</h2>
+						<p>Randomly attack any adjacent cells</p>
 
-				<div id="exampleAIDiv">
-					<h1>ExampleAI</h1>
-					<h2>Specialty: Nothing</h2>
-					<p>Randomly attack any adjacent cells</p>
+						<br>
 
+						<h3>Configure framework for your strategy:</h3>
+						<p>ExampleAI is completely random and has no configurations.</p>
+					</div>
+
+					<div id="exampleAIPlusDiv" hidden>
+						<h1>ExampleAI+</h4>
+						<h2>Specialty: Expansion</h2>
+						<p>Pick a random cell, then evaluate (based on time) if it should be attacked</p>
+
+						<br>
+
+						<h3>Configure framework for your strategy:</h3>
+						<h4>Attack Time</h4>
+						<p>ExampleAI+ picks a random cell, but will only attack it if the take time is low enough.</p>
+						<p>Normal Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="plus_normal_take_time" value="33">
+						<p>Gold Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="plus_gold_take_time" value="33">
+						<p>Energy Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="plus_energy_take_time" value="33">
+					</div>
+
+					<div id="exJayNineDiv" hidden>
+						<h1>XJ-9</h4>
+						<h2>Specialty: Defense</h2>
+						<p>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</p>
+
+						<br>
+
+						<h3>Configure framework for your strategy:</h3>
+						<h4>Attack Time</h4>
+						<p>Configure the max threshold for attack times of different types of cells.</p>
+						<p>Normal Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="plus_normal_take_time" value="33">
+						<p>Gold Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="plus_gold_take_time" value="33">
+						<p>Energy Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="plus_energy_take_time" value="33">
+						<br>
+						<h4>Blast Parameters</h4>
+						<p>XJ-9 will only blast to take high value cells from other players</p>
+						<p>Blast for gold cells?</p>
+						<input type="radio" id="xjgold_yes" name="xjgold" value="yes">
+						<label for="xjgold">Yes</label>
+						<input type="radio" id="xjgold_no" name="xjgold" value="no">
+						<label for="xjgold">No</label>
+						<p>Blast for energy cells?</p>
+						<input type="radio" id="xjgold_yes" name="xjenergy" value="yes">
+						<label for="xjgold">Yes</label>
+						<input type="radio" id="xjgold_no" name="xjenergy" value="no">
+						<label for="xjgold">No</label>
+					</div>
+
+					<div id="jaredDiv" hidden>
+						<h1>Jared Bot (Open Source)</h4>
+						<h2>Specialty: Love</h2>
+						<p>Jared Bot, otherwise known as "AI? more like Ài," is an Open Source bot that creates a heart shaped territory to store all of its bases. It actively pursues any unclaimed gold or energy cells, and randomly expands at all other times. (Happy Valentine's Day!)</p>
+
+						<br>
+
+						<h3>Configure framework for your strategy:</h3>
+						<p>Jared Bot is an Open Source Python bot, which can be found <a href="https://github.com/jay-red/jared-bot" target="_blank">here</a>. It can not be run here on the AI Generator, and should be used as sample code for Python.</p>
+					</div>
+
+					<div id="customDiv" hidden>
+						<h1>Custom</h4>
+						<h2>Specialty: Unknown</h2>
+						<p>This is where you get creative. The Custom AI framework is highly configurable, with several different parameters for controlling its strategy. It is the hardest to configure, but the most powerful when used correctly.</p>
+
+						<br>
+
+						<h3>Configure framework for your strategy:</h3>
+						<p>Only Available to Round 3 Competitors!</p>
+					</div>
+					<hr>
+
+					<!-- Global Stuff - always show -->
+					<h3>Enter your name and join the game with your selected AI!</h3>
+					<input class="input" type="text" placeholder="Enter Name" id="name_input">
 					<br>
+					<button class="input" id="join_button">Join Game</button>
 
-					<h3>Configure framework for your strategy:</h3>
-					<p>ExampleAI is completely random and has no configurations.</p>
+					<h3>Watch your AI in action on the right</h3>
+					<p>Please keep this page open. Closing this page will terminate your AI.</p>
+					<p>If you can't view the game board on the right, <a href="http://colorfight.herokuapp.com" target="_blank">click here to open in a new tab</a>.</p>
+
+					<!-- Scripts -->
+					<script src="custom.js" type="text/JavaScript"></script>
 				</div>
-
-				<div id="exampleAIPlusDiv" hidden>
-					<h1>ExampleAI+</h4>
-					<h2>Specialty: Expansion</h2>
-					<p>Pick a random cell, then evaluate (based on time) if it should be attacked</p>
-
-					<br>
-
-					<h3>Configure framework for your strategy:</h3>
-					<h4>Attack Time</h4>
-					<p>ExampleAI+ picks a random cell, but will only attack it if the take time is low enough.</p>
-					<p>Normal Max Take Time (4 - 33 seconds): </p>
-					<input class="input" type="number" min="4" max="33" id="plus_normal_take_time" value="33">
-					<p>Gold Max Take Time (4 - 33 seconds): </p>
-					<input class="input" type="number" min="4" max="33" id="plus_gold_take_time" value="33">
-					<p>Energy Max Take Time (4 - 33 seconds): </p>
-					<input class="input" type="number" min="4" max="33" id="plus_energy_take_time" value="33">
-				</div>
-
-				<div id="exJayNineDiv" hidden>
-					<h1>XJ-9</h4>
-					<h2>Specialty: Defense</h2>
-					<p>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</p>
-
-					<br>
-
-					<h3>Configure framework for your strategy:</h3>
-					<h4>Attack Time</h4>
-					<p>Configure the max threshold for attack times of different types of cells.</p>
-					<p>Normal Max Take Time (4 - 33 seconds): </p>
-					<input class="input" type="number" min="4" max="33" id="plus_normal_take_time" value="33">
-					<p>Gold Max Take Time (4 - 33 seconds): </p>
-					<input class="input" type="number" min="4" max="33" id="plus_gold_take_time" value="33">
-					<p>Energy Max Take Time (4 - 33 seconds): </p>
-					<input class="input" type="number" min="4" max="33" id="plus_energy_take_time" value="33">
-					<br>
-					<h4>Blast Parameters</h4>
-					<p>XJ-9 will only blast to take high value cells from other players</p>
-					<p>Blast for gold cells?</p>
-					<input type="radio" id="xjgold_yes" name="xjgold" value="yes">
-					<label for="xjgold">Yes</label>
-					<input type="radio" id="xjgold_no" name="xjgold" value="no">
-					<label for="xjgold">No</label>
-					<p>Blast for energy cells?</p>
-					<input type="radio" id="xjgold_yes" name="xjenergy" value="yes">
-					<label for="xjgold">Yes</label>
-					<input type="radio" id="xjgold_no" name="xjenergy" value="no">
-					<label for="xjgold">No</label>
-				</div>
-
-				<div id="agniKaiDiv" hidden>
-					<h1>AgniKai</h4>
-					<h2>Specialty: (placeholder)</h2>
-					<p>Description</p>
-
-					<br>
-
-					<h3>Configure framework for your strategy:</h3>
-					<h4>Attack Time</h4>
-					<p>Description</p>
-				</div>
-				<hr>
-
-				<!-- Global Stuff - always show -->
-				<h3>Enter your name and join the game with your selected AI!</h3>
-				<input class="input" type="text" placeholder="Enter Name" id="name_input">
-				<br>
-				<button class="input" id="join_button">Join Game</button>
-
-				<h3>Watch your AI in action on the right</h3>
-				<p>Please keep this page open. Closing this page will terminate your AI.</p>
-				<p>If you can't view the game board on the right, <a href="http://colorfight.herokuapp.com" target="_blank">click here to open in a new tab</a>.</p>
-
-				<!-- Scripts -->
-				<script src="main.js" type="text/JavaScript"></script>
 			</div>
 		</div>
 	</body>

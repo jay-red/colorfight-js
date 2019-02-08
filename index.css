@@ -40,6 +40,11 @@ h1, h2 {
 .left {
   float: left;
   width: 35%;
+  padding: 0px;
+}
+
+.padded {
+  float: left;
   padding: 20px;
 }
 
@@ -75,6 +80,16 @@ h1, h2 {
 .input {
 	width: 200px;
 	border: 2px solid #20c997;
+	font-size: 15px;
+	font-family: "Avenir";
+	padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.input:disabled {
+	width: 200px;
+	border: 2px solid #dc3545a6;
 	font-size: 15px;
 	font-family: "Avenir";
 	padding: 8px 12px;

@@ -10,6 +10,19 @@ var token = "",
 	attackIndex = 0,
 	host = "https://troycolorfight.herokuapp.com/";
 
+function randomize( array ) {
+    var currentIndex = array.length,
+        temporaryValue, randomIndex;
+    while( 0 !== currentIndex ) {
+        randomIndex = Math.floor( Math.random() * currentIndex );
+        currentIndex -= 1;
+        temporaryValue = array[ currentIndex ];
+        array[ currentIndex ] = array[ randomIndex ];
+        array[ randomIndex ] = temporaryValue;
+    }
+    return array;
+}
+
 function GetCell( x, y ) {
 	if( x >= 0 && y >= 0 && x < 30 && y < 30 ) {
 		return data[ "cells" ][ y * 30 + x ];
@@ -17,6 +30,17 @@ function GetCell( x, y ) {
 		return null;
 	}
 }	
+
+function BuildBase( x, y ) {
+	var xhr = new XMLHttpRequest();
+	xhr.open( "POST", host + "/buildbase" );
+	xhr.setRequestHeader( "Content-Type", "application/json;charset=UTF-8" );
+	xhr.onreadystatechange = function() {
+		if( this.readyState == XMLHttpRequest.DONE && this.status == 200 ) {
+		}
+	}
+	xhr.send( JSON.stringify( { "cellx" : x, "celly" : y, "token" : token } ) );
+}
 
 function Attack( x = -1, y = -1, boost = false ) {
 	if( attackIndex == playerData[ "targets" ].length ) {
@@ -28,8 +52,10 @@ function Attack( x = -1, y = -1, boost = false ) {
 		y = playerData[ "targets" ][ attackIndex ][ "y" ];
 	}
 	if( ( lastAttack[ 0 ] == x && lastAttack[ 1 ] == y ) ) {
-		attackIndex++;
-		Attack();
+		if( !playerData[ "attackOverride" ] ) {
+			attackIndex++;
+			Attack();
+		}
 		return;
 	}
 	attacking = true;
@@ -41,14 +67,16 @@ function Attack( x = -1, y = -1, boost = false ) {
 		if( this.readyState == XMLHttpRequest.DONE && this.status == 200 ) {
 			attacking = false;
 			var d = JSON.parse( this.responseText );
-			if( d[ "err_code" ] == 3 || d[ "err_code" ] == 1 ) {
-				Attack();
+			if( d[ "err_code" ] == 3 || ( playerData[ "precise" ] && d[ "err_code" ] == 1 ) ) {
+				if( !playerData[ "attackOverride" ] ) Attack();
 			} else if( d[ "err_code" ] == 0 ) {
 				lastAttack = tempAttack;
 				Refresh();
 			} else {
-				attackIndex++;
-				Attack();
+				if( !playerData[ "attackOverride" ] ) {
+					attackIndex++;
+					Attack();
+				}
 			}
 		}
 	}
@@ -105,7 +133,27 @@ function PursueAccurate( targetStrList ) {
 	Attack();
 }
 
-function GameLoop() {
+function InitPlayerData() {
+	playerData[ "precise" ] = false;
+	playerData[ "attackOverride" ] = false;
+}
+
+function EvaluateAdjacent( c ) {
+	if( c != null && !( c in playerData[ "adjacent"] ) && c[ "o" ] != uid ) {
+		playerData[ "adjacent" ].push( c );
+		if( c[ "ct" ] == "gold" ) {
+			playerData[ "adjacentGold" ].push( c );
+		} else if( c[ "ct" ] == "energy" ) {
+			playerData[ "adjacentEnergy" ].push( c );
+		} else if( c[ "o" ] == 0 ) {
+			playerData[ "adjacentNormal" ].push( c );
+		} else {
+			playerData[ "adjacentEnemy" ].push( c );
+		}
+	}
+}
+
+function FetchData() {
 	var c,
 		up,
 		right,
@@ -119,6 +167,8 @@ function GameLoop() {
 	playerData[ "adjacent" ] = [];
 	playerData[ "adjacentGold" ] = [];
 	playerData[ "adjacentEnergy" ] = [];
+	playerData[ "adjacentNormal" ] = [];
+	playerData[ "adjacentEnemy" ] = []
 
 	// Unclaimed special cells
 	playerData[ "goldUCells" ] = [];
@@ -126,50 +176,21 @@ function GameLoop() {
 
 	// Enemy special cells
 	playerData[ "goldECells" ] = [];
-	playerData[ "goldECells" ] = [];
+	playerData[ "energyECells" ] = [];
 
-	console.log( data );
 	for( var x = 0; x < 30; x++ ) {
 		for( var y = 0; y < 30; y++ ) {
 			c = data[ "cells" ][ y * 30 + x ];
-			if( c[ "o" ] == uid || ( c[ "c" ] == 1 && c[ "a" ] == uid ) ) {
+			if( c[ "o" ] == uid || ( playerData[ "precise" ] && c[ "c" ] == 1 && c[ "a" ] == uid ) ) {
 				playerData[ "cells" ].push( c );
 				up = GetCell( x, y - 1 );
 				right = GetCell( x + 1, y );
 				down = GetCell( x, y + 1 );
 				left = GetCell( x - 1, y );
-				if( up != null && !( up in playerData[ "adjacent" ] ) ) {
-					playerData[ "adjacent" ].push( up );
-					if( up[ "ct" ] == "gold" ) {
-						playerData[ "adjacentGold" ].push( up );
-					} else if( up[ "ct" ] == "energy" ) {
-						playerData[ "adjacentEnergy" ].push( up );
-					}
-				}
-				if( right != null && !( right in playerData[ "adjacent" ] ) ) {
-					playerData[ "adjacent" ].push( right );
-					if( right[ "ct" ] == "gold" ) {
-						playerData[ "adjacentGold" ].push( right );
-					} else if( right[ "ct" ] == "energy" ) {
-						playerData[ "adjacentEnergy" ].push( right );
-					}
-				}
-				if( down != null && !( down in playerData[ "adjacent" ] ) ) {
-					playerData[ "adjacent" ].push( down );
-					if( down[ "ct" ] == "gold" ) {
-						playerData[ "adjacentGold" ].push( down );
-					} else if( down[ "ct" ] == "energy" ) {
-						playerData[ "adjacentEnergy" ].push( down );
-					}
-				}
-				if( left != null && !( left in playerData[ "adjacent" ] ) ) {
-					playerData[ "adjacent" ].push( left );
-					if( left[ "ct" ] == "gold" ) {
-						playerData[ "adjacentGold" ].push( left );
-					} else if( left[ "ct" ] == "energy" ) {
-						playerData[ "adjacentEnergy" ].push( left );
-					}
-				}
+				EvaluateAdjacent( up );
+				EvaluateAdjacent( right );
+				EvaluateAdjacent( down );
+				EvaluateAdjacent( left );
 			} else {
 				if( c[ "ct" ] == "gold" ) {
 					if( c[ "o" ] == 0 ) {
@@ -187,7 +208,88 @@ function GameLoop() {
 			}
 		}
 	}
+}
+
+function ExampleAI() {
+	attackIndex = 0;
+	playerData[ "targets" ] = randomize( playerData[ "adjacent" ] );
+	Attack();
+}
+
+function ExampleAIPlus() {
+	attackIndex = 0;
+	playerData[ "adjacent" ] = randomize( playerData[ "adjacent" ] );
+	playerData[ "targets" ] = [];
+	for( var t = 0; t < playerData[ "adjacent" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacent" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacent" ][ t ] );
+		}
+	}
+	Attack();
+}
+
+function ExJayNine() {
+	if( playerData[ "gold" ] >= 60 && playerData[ "baseNum" ] < 3 ) {
+		var newBase = playerData[ "cells" ][ Math.floor( Math.random() * playerData[ "cells" ].length ) ];
+		BuildBase( newBase[ "x" ], newBase[ "y" ] );
+	}
+	attackIndex = 0;
+	playerData[ "targets" ] = [];
+	var t = 0;
+	for( t = 0; t < playerData[ "adjacentGold" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentGold" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentGold" ][ t ] );
+		}
+	}
+	for( t = 0; t < playerData[ "adjacentEnergy" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentEnergy" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentEnergy" ][ t ] );
+		}
+	}
+	playerData[ "adjacentNormal" ] = randomize( playerData[ "adjacentNormal" ] );
+	for( t = 0; t < playerData[ "adjacentNormal" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentNormal" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentNormal" ][ t ] );
+		}
+	}
+	for( t = 0; t < playerData[ "adjacentEnemy" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentEnemy" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentEnemy" ][ t ] );
+		}
+	}
+	Attack();
+}
+
+function Custom() {
 	PursueAccurate( [ "goldUCells", "energyUCells" ] );
+}
+
+/*<option value="exampleAI">ExampleAI</option>
+<option value="exampleAIPlus">ExampleAI+</option>
+<option value="exJayNine">XJ-9</option>
+<option value="jared">Jared Bot</option>
+<option value="custom">Custom</option>*/
+
+function GameLoop() {
+	switch( mode ) {
+		case "exampleAIPlus":
+			ExampleAIPlus();
+			break;
+		case "exJayNine":
+			ExJayNine();
+			break;
+		case "custom":
+			Custom();
+			break;
+		default:
+			ExampleAI();
+			break;
+	}
+}
+
+function GetTakeTimeEq( timeDiff ) {
+	if( timeDiff <= 0 ) return 33;
+	return 30 * ( Math.pow( 2, ( -timeDiff / 30.0 ) ) ) + 3;
 }
 
 function Refresh() {
@@ -201,11 +303,32 @@ function Refresh() {
 			} else {
 				var t = JSON.parse( this.responseText );
 				data[ "info" ] = t[ "info" ];
+				data[ "users" ] = t[ "users" ];
 				for( var i = 0; i < t[ "cells" ].length; i++ ) {
 					data[ "cells" ][ t[ "cells" ][ i ][ "y" ] * 30 + t[ "cells" ][ i ][ "x" ] ] = t[ "cells" ][ i ];
 				}
 			}
+			for( var j = 0; j < data[ "cells" ].length; j++ ) {
+                if( data[ "cells" ][ j ][ "o" ] == 0 ) {
+                	data[ "cells" ][ j ][ "t" ] = 2;
+                } else {
+                	data[ "cells" ][ j ][ "t" ] = GetTakeTimeEq( data[ "info" ][ "time" ] - data[ "cells" ][ j ][ "ot" ] );
+                }
+			}
+			for( var k = 0; k < data[ "users" ].length; k++ ) {
+				if( data[ "users" ][ k ][ "id" ] == uid ) {
+					playerData[ "gold" ] = data[ "users" ][ k ][ "gold" ];
+					playerData[ "energy" ] = data[ "users" ][ k ][ "energy" ];
+					playerData[ "cdTime" ] = data[ "users" ][ k ][ "cdTime" ];
+					playerData[ "buildCdTime" ] = data[ "users" ][ k ][ "build_cd_time" ];
+					playerData[ "cellNum" ] = data[ "users" ][ k ][ "cell_num" ];
+					playerData[ "baseNum" ] = data[ "users" ][ k ][ "base_num" ];
+					playerData[ "goldCellNum" ] = data[ "users" ][ k ][ "gold_cell_num" ];
+					playerData[ "energyCellNum" ] = data[ "users" ][ k ][ "energy_cell_num" ];
+				}
+			}
 			lastUpdate = data[ "info" ][ "time" ];
+			FetchData();
 			GameLoop();
 		}
 	}
@@ -231,13 +354,37 @@ function JoinGame( name ) {
 	xhr.send( JSON.stringify( { "name" : name } ) );
 }
 
-/*
 var name_input = document.getElementById( "name_input" ),
-	join_button = document.getElementById( "join_button" );
+	join_button = document.getElementById( "join_button" ),
+	framework_select = document.getElementById('framework_select');
 
 join_button.addEventListener( "click", function() {
 	if( name_input.value.trim() != "" ) {
 		JoinGame( name_input.value.trim() );
+		InitPlayerData();
+		framework_select.disabled = true;
+		name_input.disabled = true;
+		join_button.disabled = true;
 	}
 } );
-*/
+
+framework_select.addEventListener( "change", function() {
+	//Hide all the divs
+	document.getElementById('exampleAIDiv').setAttribute("hidden", true);
+	document.getElementById('exampleAIPlusDiv').setAttribute("hidden", true);
+	document.getElementById('exJayNineDiv').setAttribute("hidden", true);
+	document.getElementById('jaredDiv').setAttribute("hidden", true);
+	document.getElementById('customDiv').setAttribute("hidden", true);
+
+	//Show the correct div
+	mode = framework_select.value;
+	document.getElementById( mode + "Div" ).removeAttribute("hidden");
+
+	if( mode == "jared" ) {
+		name_input.disabled = true;
+		join_button.disabled = true;
+	} else {
+		name_input.disabled = false;
+		join_button.disabled = false;
+	}
+} );
