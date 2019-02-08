@@ -1,89 +1,101 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="index.css">
 	</head>
 	<body>
-		<h1>Colorfight-JS</h1>
-		<h2>A JavaScript implementation of Colorfight, for testing different AI strategies</h2>
-		<h3>Step 1: Learn about the different AI frameworks</h3>
-		<h4>ExampleAI</h4>
-		<span>Specialty: Nothing</span>
-		<br />
-		<span>Randomly attack any adjacent cells</span>
-		<br />
-		<h4>ExampleAI+</h4>
-		<span>Specialty: Expansion</span>
-		<br />
-		<span>Pick a random cell, then evaluate (based on time) if it should be attacked</span>
-		<br />
-		<h4>XJ-9</h4>
-		<span>Specialty: Defense</span>
-		<br />
-		<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
-		<h4>AgniKai</h4>
-		<span>Specialty: Attack</span>
-		<br />
-		<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
-		<!-- DO NOT MODIFY THE ID OR NAME ATTRIBUTES OF THESE -->
-		<h3>Step 2: Select an AI framework for your bot</h3>
-		<select id="framework_select">
-			<option value="exampleAI">ExampleAI</option>
-			<option value="exampleAIPlus">ExampleAI+</option>
-			<option value="exJayNine">XJ-9</option>
-			<option value="exJayNine">AgniKai</option>
-		</select>
-		<br />
-		<h3>Step 3: Configure framework for your strategy</h3>
-		<h4>ExampleAI</h4>
-		<span>Completely random. No configurations.</span>
-		<h4>ExampleAI+</h4>
-		<h5>Attack Time</h5>
-		<span>ExampleAI+ picks a random cell, but will only attack it if the take time is low enough.</span>
-		<br />
-		<br />
-		<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
-		<br />
-		<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
-		<br />
-		<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
-		<br />
-		<h4>XJ-9</h4>
-		<h5>Attack Time</h5>
-		<span>Configure the max threshold for attack times of different types of cells</span>
-		<br />
-		<br />
-		<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
-		<br />
-		<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
-		<br />
-		<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
-		<br />
-		<h5>Blast Parameters</h5>
-		<span>XJ-9 will only blast to take high value cells from other players</span>
-		<br />
-		<br />
-		<span>Blast for gold cells?</span>
-		<br />
-		<input type="radio" id="xjgold_yes" name="xjgold" value="yes">
-		<label for="xjgold">Yes</label>
-		<input type="radio" id="xjgold_no" name="xjgold" value="no">
-		<label for="xjgold">No</label>
-		<br />
-		<span>Blast for energy cells?</span>
-		<br />
-		<input type="radio" id="xjgold_yes" name="xjenergy" value="yes">
-		<label for="xjgold">Yes</label>
-		<input type="radio" id="xjgold_no" name="xjenergy" value="no">
-		<label for="xjgold">No</label>
-		<br />
-		<h5>Attack Time </h5>
-		<h4>AgniKai</h4>
-		<h3>Step 4: Join the game with your AI</h3>
-		<input type="text" placeholder="Enter name..." id="name_input" />
-		<button id="join_button">Join Game</button>
-		<script src="main.js"></script>
-		<!-- END PROTECTED ATTRIBUTES -->
-		<h3>Step 5: Watch it in action</h3>
-		<span>Navigate to <a href="http://colorfight.herokuapp.com">http://colorfight.herokuapp.com</a></span>
+		<iframe src="http://colorfight.herokuapp.com" height="700" width="100%"></iframe>
+		<div class="logo">
+			<div class="container">
+				<h1>
+					<span style="color: rgb(230, 25, 75);">C</span><span style="color: rgb(60, 180, 75);">O</span><span style="color: rgb(255, 225, 25);">L</span><span style="color: rgb(0, 130, 200);">O</span><span style="color: rgb(245, 130, 49);">R</span><span style="color: rgb(145, 30, 180);">F</span><span style="color: rgb(70, 240, 240);">I</span><span style="color: rgb(240, 50, 230);">G</span><span style="color: rgb(210, 245, 60);">H</span><span style="color: rgb(0, 128, 128);">T</span><span style="color: rgb(170, 110, 40);">!</span>
+				</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="left">
+				<h2>A JavaScript implementation of Colorfight, for testing different AI strategies</h2>
+				<h3>Step 1: Learn about the different AI frameworks</h3>
+				<h4>ExampleAI</h4>
+				<span>Specialty: Nothing</span>
+				<br />
+				<span>Randomly attack any adjacent cells</span>
+				<br />
+				<h4>ExampleAI+</h4>
+				<span>Specialty: Expansion</span>
+				<br />
+				<span>Pick a random cell, then evaluate (based on time) if it should be attacked</span>
+				<br />
+				<h4>XJ-9</h4>
+				<span>Specialty: Defense</span>
+				<br />
+				<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
+				<h4>AgniKai</h4>
+				<span>Specialty: Attack</span>
+				<br />
+				<span>Attacks highest value adjacent cell. Randomly builds bases, and defends with blast.</span>
+				<!-- DO NOT MODIFY THE ID OR NAME ATTRIBUTES OF THESE -->
+				<h3>Step 2: Select an AI framework for your bot</h3>
+				<select id="framework_select">
+					<option value="exampleAI">ExampleAI</option>
+					<option value="exampleAIPlus">ExampleAI+</option>
+					<option value="exJayNine">XJ-9</option>
+					<option value="exJayNine">AgniKai</option>
+				</select>
+				<br />
+				<h3>Step 3: Configure framework for your strategy</h3>
+				<h4>ExampleAI</h4>
+				<span>Completely random. No configurations.</span>
+				<h4>ExampleAI+</h4>
+				<h5>Attack Time</h5>
+				<span>ExampleAI+ picks a random cell, but will only attack it if the take time is low enough.</span>
+				<br />
+				<br />
+				<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
+				<br />
+				<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
+				<br />
+				<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
+				<br />
+				<h4>XJ-9</h4>
+				<h5>Attack Time</h5>
+				<span>Configure the max threshold for attack times of different types of cells</span>
+				<br />
+				<br />
+				<span>Normal Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_normal_take_time" value="33" />
+				<br />
+				<span>Gold Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_gold_take_time" value="33" />
+				<br />
+				<span>Energy Max Take Time (4 - 33 seconds): </span><input type="number" min="4" max="33" id="plus_energy_take_time" value="33" />
+				<br />
+				<h5>Blast Parameters</h5>
+				<span>XJ-9 will only blast to take high value cells from other players</span>
+				<br />
+				<br />
+				<span>Blast for gold cells?</span>
+				<br />
+				<input type="radio" id="xjgold_yes" name="xjgold" value="yes">
+				<label for="xjgold">Yes</label>
+				<input type="radio" id="xjgold_no" name="xjgold" value="no">
+				<label for="xjgold">No</label>
+				<br />
+				<span>Blast for energy cells?</span>
+				<br />
+				<input type="radio" id="xjgold_yes" name="xjenergy" value="yes">
+				<label for="xjgold">Yes</label>
+				<input type="radio" id="xjgold_no" name="xjenergy" value="no">
+				<label for="xjgold">No</label>
+				<br />
+				<h5>Attack Time </h5>
+				<h4>AgniKai</h4>
+				<h3>Step 4: Join the game with your AI</h3>
+				<input type="text" placeholder="Enter name..." id="name_input" />
+				<button id="join_button">Join Game</button>
+				<script src="main.js"></script>
+				<!-- END PROTECTED ATTRIBUTES -->
+				<h3>Step 5: Watch it in action</h3>
+				<span>Navigate to <a href="http://colorfight.herokuapp.com">http://colorfight.herokuapp.com</a></span>
+			</div>
+		</div>
 	</body>
 </html>

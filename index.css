@@ -1,0 +1,83 @@
+/*Custom fonts*/
+@font-face {
+    font-family: Avenir;
+    src: url("fonts/AvenirLTStd-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Avenir;
+    font-weight: bold;
+    src: url("fonts/AvenirLTStd-Black.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Produkt;
+    src: url("fonts/Produkt-Light.otf") format("opentype");
+}
+
+body {
+	margin-top: 0;
+	font-family: 'Avenir', sans-serif;
+}
+
+.left {
+  float: left;
+  width: 35%;
+  padding: 10px;
+}
+
+.right {
+  float: left;
+  width: 60%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.container {
+	padding: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+iframe {
+	position: fixed;
+	float: left;
+	margin-left: 35%;
+	width: 60%;
+	height: 100%;
+	border: none;
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+.logo {
+	position: fixed;
+	float: left;
+	margin-left: 35%;
+	width: 60%;
+	height: 100px;
+	background-color: #fff;
+}
+
+@media only screen and (max-width: 600px) {
+	.left {
+		width: 100%;
+	}
+
+	iframe {
+		display: none;
+	}
+
+	.logo {
+		display: none;
+	}
+}
