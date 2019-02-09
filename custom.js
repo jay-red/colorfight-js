@@ -5,9 +5,11 @@ var token = "",
 	tempAttack = [ -1, -1 ],
 	lastUpdate = 0,
 	attacking = false,
+	blasting = false,
 	playerData = {},
 	mode = "",
 	attackIndex = 0,
+	blastIndex = 0,
 	host = "https://troycolorfight.herokuapp.com/";
 
 function randomize( array ) {
@@ -42,8 +44,56 @@ function BuildBase( x, y ) {
 	xhr.send( JSON.stringify( { "cellx" : x, "celly" : y, "token" : token } ) );
 }
 
+function Blast( x = -1, y = -1, direction = "square" ) {
+	if( !playerData[ "blastOverride" ] && blastIndex == playerData[ "blastTargets" ].length ) {
+		Refresh();
+		return;
+	}
+	if( x == -1 && y == -1 ) {
+		x = playerData[ "blastTargets" ][ blastIndex ][ "x" ];
+		y = playerData[ "blastTargets" ][ blastIndex ][ "y" ];
+		up = GetCell( x, y - 1 );
+		right = GetCell( x + 1, y );
+		down = GetCell( x, y + 1 );
+		left = GetCell( x - 1, y );
+		if( up != null && up[ "o" ] == uid ) {
+			y = y - 1;
+		} else if( right != null && right[ "o" ] == uid ) {
+			x = x + 1;
+		} else if( down != null && down[ "o" ] == uid ) {
+			y = y + 1;
+		} else if( left != null && left[ "o" ] == uid ) {
+			x = x - 1;
+		} else {
+			blastIndex++;
+			Blast();
+		}
+	}
+	blasting = true;
+	var xhr = new XMLHttpRequest();
+	xhr.open( "POST", host + "/blast" );
+	xhr.setRequestHeader( "Content-Type", "application/json;charset=UTF-8" );
+	xhr.onreadystatechange = function() {
+		if( this.readyState == XMLHttpRequest.DONE && this.status == 200 ) {
+			blasting = true;
+			var d = JSON.parse( this.responseText );
+			if( d[ "err_code" ] == 3 ) {
+				if( !playerData[ "blastOverride" ] ) Blast();
+			} else if( d[ "err_code" ] == 0 ) {
+				Refresh();
+			} else {
+				if( !playerData[ "blastOverride" ] ) {
+					blastIndex++;
+					Blast();
+				}
+			}
+		}
+	}
+	xhr.send( JSON.stringify( { "cellx" : x, "celly" : y, "token" : token, "direction" : direction } ) );
+}
+
 function Attack( x = -1, y = -1, boost = false ) {
-	if( attackIndex == playerData[ "targets" ].length ) {
+	if( !playerData[ "attackOverride" ] && attackIndex == playerData[ "targets" ].length ) {
 		Refresh();
 		return;
 	}
@@ -136,6 +186,9 @@ function PursueAccurate( targetStrList ) {
 function InitPlayerData() {
 	playerData[ "precise" ] = false;
 	playerData[ "attackOverride" ] = false;
+	playerData[ "blastOverride" ] = false;
+	playerData[ "blastGold" ] = true;
+	playerData[ "blastEnergy" ] = true;
 }
 
 function EvaluateAdjacent( c ) {
@@ -228,36 +281,59 @@ function ExampleAIPlus() {
 	Attack();
 }
 
+function EvaluateBlast() {
+	return playerData[ "energy" ] >= 60;
+}
+
 function ExJayNine() {
 	if( playerData[ "gold" ] >= 60 && playerData[ "baseNum" ] < 3 ) {
 		var newBase = playerData[ "cells" ][ Math.floor( Math.random() * playerData[ "cells" ].length ) ];
 		BuildBase( newBase[ "x" ], newBase[ "y" ] );
 	}
 	attackIndex = 0;
+	blastIndex = 0;
 	playerData[ "targets" ] = [];
+	playerData[ "blastTargets" ] = [];
 	var t = 0;
 	for( t = 0; t < playerData[ "adjacentGold" ].length; t++ ) {
 		if( evaluateTT( playerData[ "adjacentGold" ][ t ] ) ) {
 			playerData[ "targets" ].push( playerData[ "adjacentGold" ][ t ] );
+		} else if( playerData[ "blastGold" ] && playerData[ "adjacentGold" ][ t ][ "t" ] > 0 ) {
+			playerData[ "blastTargets" ].push( playerData[ "adjacentGold" ][ t ] );
 		}
 	}
 	for( t = 0; t < playerData[ "adjacentEnergy" ].length; t++ ) {
 		if( evaluateTT( playerData[ "adjacentEnergy" ][ t ] ) ) {
 			playerData[ "targets" ].push( playerData[ "adjacentEnergy" ][ t ] );
+		} else if( playerData[ "blastEnergy" ] && playerData[ "adjacentEnergy" ][ t ][ "t" ] > 0 ){
+			playerData[ "blastTargets" ].push( playerData[ "adjacentEnergy" ][ t ] );
 		}
 	}
-	playerData[ "adjacentNormal" ] = randomize( playerData[ "adjacentNormal" ] );
-	for( t = 0; t < playerData[ "adjacentNormal" ].length; t++ ) {
-		if( evaluateTT( playerData[ "adjacentNormal" ][ t ] ) ) {
-			playerData[ "targets" ].push( playerData[ "adjacentNormal" ][ t ] );
+	if( EvaluateBlast() && playerData[ "blastTargets" ].length > 0 ) {
+		playerData[ "blastTargets" ] = playerData[ "blastTargets" ].sort( function( a, b ) {
+			if( a[ "t" ] > b[ "t" ] ) {
+				return -1;
+			} else if( a[ "t" ] < b[ "t" ] ) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} );
+		Blast();
+	} else {
+		playerData[ "adjacentNormal" ] = randomize( playerData[ "adjacentNormal" ] );
+		for( t = 0; t < playerData[ "adjacentNormal" ].length; t++ ) {
+			if( evaluateTT( playerData[ "adjacentNormal" ][ t ] ) ) {
+				playerData[ "targets" ].push( playerData[ "adjacentNormal" ][ t ] );
+			}
 		}
-	}
-	for( t = 0; t < playerData[ "adjacentEnemy" ].length; t++ ) {
-		if( evaluateTT( playerData[ "adjacentEnemy" ][ t ] ) ) {
-			playerData[ "targets" ].push( playerData[ "adjacentEnemy" ][ t ] );
+		for( t = 0; t < playerData[ "adjacentEnemy" ].length; t++ ) {
+			if( evaluateTT( playerData[ "adjacentEnemy" ][ t ] ) ) {
+				playerData[ "targets" ].push( playerData[ "adjacentEnemy" ][ t ] );
+			}
 		}
+		Attack();
 	}
-	Attack();
 }
 
 function Custom() {
@@ -357,6 +433,18 @@ function JoinGame( name ) {
 var name_input = document.getElementById( "name_input" ),
 	join_button = document.getElementById( "join_button" ),
 	framework_select = document.getElementById('framework_select');
+
+var plus_normal_take_time = document.getElementById( "plus_normal_take_time" ),
+	plus_gold_take_time = document.getElementById( "plus_normal_take_time" ),
+	plus_energy_take_time = document.getElementById( "plus_energy_take_time" );
+
+var xj_normal_take_time = document.getElementById( "xj_normal_take_time" ),
+	xj_gold_take_time = document.getElementById( "xj_normal_take_time" ),
+	xj_energy_take_time = document.getElementById( "xj_energy_take_time" ),
+	xjgold_yes = document.getElementById( "xjgold_yes" ),
+	xjgold_no = document.getElementById( "xjgold_no" ),
+	xjenergy_yes = document.getElementById( "xjenergy_yes" ),
+	xjenergy_no = document.getElementById( "xjenergy_no" );
 
 join_button.addEventListener( "click", function() {
 	if( name_input.value.trim() != "" ) {
