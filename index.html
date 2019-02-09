@@ -85,14 +85,14 @@
 						<p>XJ-9 will only blast to take high value cells from other players</p>
 						<p>Blast for gold cells?</p>
 						<input type="radio" id="xjgold_yes" name="xjgold" value="yes">
-						<label for="xjgold">Yes</label>
+						<label for="xjgold_yes">Yes</label>
 						<input type="radio" id="xjgold_no" name="xjgold" value="no">
-						<label for="xjgold">No</label>
+						<label for="xjgold_no">No</label>
 						<p>Blast for energy cells?</p>
 						<input type="radio" id="xjenergy_yes" name="xjenergy" value="yes">
-						<label for="xjgold">Yes</label>
+						<label for="xjenergy_yes">Yes</label>
 						<input type="radio" id="xjenergy_no" name="xjenergy" value="no">
-						<label for="xjgold">No</label>
+						<label for="xjenergy_no">No</label>
 					</div>
 
 					<div id="jaredDiv" hidden>
@@ -109,12 +109,61 @@
 					<div id="customDiv" hidden>
 						<h1>Custom</h4>
 						<h2>Specialty: Unknown</h2>
-						<p>This is where you get creative. The Custom AI framework is highly configurable, with several different parameters for controlling its strategy. It is the hardest to configure, but the most powerful when used correctly.</p>
+						<p>This is where you get creative. The Custom AI framework is highly configurable, with several different parameters for controlling its strategy. It is the hardest to configure, but the most powerful when used correctly. <b>Work in Progress.</b> It uses pathfinding, blasts, builds bases, and pursues resources by default. Good for testing against a semi-smart bot.</p>
 
 						<br>
 
 						<h3>Configure framework for your strategy:</h3>
-						<p>Only Available to Round 3 Competitors!</p>
+						<h4>Global Attack Time</h4>
+						<p>Configure the max threshold for attack times of different types of cells.</p>
+						<p>Normal Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="custom_normal_take_time" value="33">
+						<p>Gold Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="custom_gold_take_time" value="33">
+						<p>Energy Max Take Time (4 - 33 seconds): </p>
+						<input class="input" type="number" min="4" max="33" id="custom_energy_take_time" value="33">
+						<br>
+						<h4>Global Priorities</h4>
+						<p>Configure how the AI evaluates the importance of special cells (Gold & Energy).</p>
+						<p>Energy vs. Gold</p>
+						<input type="radio" id="custom_energy_first" value="energy" name="custom_special_priority" disabled>
+						<label for="custom_energy_first">Energy over Gold</label>
+						<br>
+						<input type="radio" id="custom_gold_first" value="gold" name="custom_special_priority" disabled>
+						<label for="custom_gold_first">Gold over Energy</label>
+						<br>
+						<input type="radio" id="custom_gold_energy" value="both" name="custom_special_priority" disabled>
+						<label for="custom_gold_energy">Equal Priority</label>
+						<br>
+						<h4>Recharge</h4>
+						<p>Configure how the AI acts when it needs energy cells</p>
+						<p>Pursue Energy cells when energyCellNum is less than (0 to disable, 18 max):</p>
+						<input class="input" type="number" min="0" max="18" id="custom_min_ecell" value="0" disabled>
+						<p>Unclaimed vs. Claimed</p>
+						<input type="radio" id="custom_eu" value="u" name="custom_e_priority" disabled>
+						<label for="custom_eu_first">Unclaimed over Claimed</label>
+						<br>
+						<input type="radio" id="custom_ec" value="c" name="custom_e_priority" disabled>
+						<label for="custom_ec_first">Claimed over Unclaimed</label>
+						<br>
+						<input type="radio" id="custom_ecu" value="b" name="custom_e_priority" disabled>
+						<label for="custom_ecu">Equal Priority</label>
+						<br>
+						<h4>Loot</h4>
+						<p>Configure how the AI acts when it needs gold cells</p>
+						<p>Pursue Gold cells when goldCellNum is less than (0 to disable, 18 max):</p>
+						<input class="input" type="number" min="0" max="18" id="custom_min_gcell" value="0" disabled>
+						<p>Unclaimed vs. Claimed</p>
+						<input type="radio" id="custom_gu" value="u" name="custom_g_priority" disabled>
+						<label for="custom_gu_first">Unclaimed over Claimed</label>
+						<br>
+						<input type="radio" id="custom_gc" value="c" name="custom_g_priority" disabled>
+						<label for="custom_gc_first">Claimed over Unclaimed</label>
+						<br>
+						<input type="radio" id="custom_gcu" value="b" name="custom_g_priority" disabled>
+						<label for="custom_gcu">Equal Priority</label>
+						<br>
+						<h4>
 					</div>
 					<hr>
 

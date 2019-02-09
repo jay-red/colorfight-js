@@ -4,33 +4,33 @@
 "		Max energy take time"
 "		Max normal take time"
 #
-#	Expansion - Randomly choose a cell, evaluate on take times
-#		Recharge Frequency
-#		Loot Frequency
-#		Attack Frequecy
+"	Expansion - Randomly choose a cell, evaluate on take times"
+"		Recharge Frequency"
+"		Loot Frequency"
+"		Attack Frequecy"
 #		Defend Frequency
-#	Recharge - Attack the closest cell to energy
-#		When
-#			Energy Cell Num < or > ???
-#		Yes or No
+"	Recharge - Attack the closest cell to energy"
+"		When"
+"			Energy Cell Num < or > ???"
+"		Yes or No"
 "		Accurate or Precise"
-#		Priorties
+"		Priorties"
 "			Only pursue empty"
 "			Only pursue enemy"
 "			Pursue empty before enemy"
 "			Pursue enemy before empty"
 "			Pursue whichever is closest"
 #		Follow with random attack, yes or no
-#	Loot - Attack the closest cell to gold
-#		When
-#			Gold Cell num < or > ???
-#		Yes or No
-#		Accurate or Precise
-#		Priorties
-#			Only pursue empty
-#			Only pursue enemy
-#			Pursue empty before enemy
-#			Pursue enemy before empty
+"	Loot - Attack the closest cell to gold"
+"		When"
+"			Gold Cell num < or > ???"
+"		Yes or No"
+"		Accurate or Precise"
+"		Priorties"
+"			Only pursue empty"
+"			Only pursue enemy"
+"			Pursue empty before enemy"
+"			Pursue enemy before empty"
 #		Follow with random attack, yes or no
 #	Attack - Attack the closest cell to enemy base
 #		When
@@ -48,9 +48,9 @@
 #	Gold - Boost when Energy < or > ???
 #	Energy - Boost when Energy < or > ???
 #
-#BuildBase
-#	Location
-#		Random
+"BuildBase"
+"	Location"
+"		Random"
 #		Clustered
 #		Far away from enemy
 #		Far away from each other

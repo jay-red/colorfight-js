@@ -9,12 +9,8 @@ var token = "",
 	playerData = {},
 	mode = "",
 	attackIndex = 0,
-<<<<<<< HEAD
 	blastIndex = 0,
 	host = "https://colorfight.herokuapp.com/";
-=======
-	host = "https://colorfight.herokuapp.com/";
->>>>>>> 42f21d678908ed665ec6c681a0011f4f6223cec5
 
 function randomize( array ) {
     var currentIndex = array.length,
@@ -73,13 +69,17 @@ function Blast( x = -1, y = -1, direction = "square" ) {
 			Blast();
 		}
 	}
+	if( !playerData[ "blastOverride" ] && blasting ) {
+		Blast();
+		return;
+	}
 	blasting = true;
 	var xhr = new XMLHttpRequest();
 	xhr.open( "POST", host + "/blast" );
 	xhr.setRequestHeader( "Content-Type", "application/json;charset=UTF-8" );
 	xhr.onreadystatechange = function() {
 		if( this.readyState == XMLHttpRequest.DONE && this.status == 200 ) {
-			blasting = true;
+			blasting = false;
 			var d = JSON.parse( this.responseText );
 			if( d[ "err_code" ] == 3 ) {
 				if( !playerData[ "blastOverride" ] ) Blast();
@@ -109,7 +109,11 @@ function Attack( x = -1, y = -1, boost = false ) {
 		if( !playerData[ "attackOverride" ] ) {
 			attackIndex++;
 			Attack();
+			return;
 		}
+	}
+	if( !playerData[ "attackOverride" ] && attacking ) {
+		Attack();
 		return;
 	}
 	attacking = true;
@@ -139,11 +143,11 @@ function Attack( x = -1, y = -1, boost = false ) {
 
 function evaluateTT( c ) {
 	if( c[ "t" ] > 0 ) {
-		if( c[ "ct" ] == "gold" && c[ "t" ] < 4.0 ) {
+		if( c[ "ct" ] == "gold" && c[ "t" ] < playerData[ "goldTT" ] ) {
 			return true;
-		} else if( c[ "ct" ] == "energy" && c[ "t" ] < 4.0 ) {
+		} else if( c[ "ct" ] == "energy" && c[ "t" ] < playerData[ "energyTT" ] ) {
 			return true;
-		} else if( c[ "t" ] < 4.0 ) {
+		} else if( c[ "t" ] < playerData[ "normalTT" ] ) {
 			return true;
 		}
 	}
@@ -154,12 +158,11 @@ function distanceDiag( c1, c2 ) {
 	return Math.sqrt( Math.pow( Math.abs( c1[ "x" ] - c2[ "x" ] ), 2 ) + Math.pow( Math.abs( c1[ "y" ] - c2[ "y" ] ), 2 ) );
 }
 
-function PursuePrecise( targetStrList ) {
+function Pursue( targetStrList = [] ) {
 	var targets = [];
-}
-
-function PursueAccurate( targetStrList ) {
-	var targets = [];
+	if( targetStrList.length == 0 ) {
+		targetStrList = playerData[ "pursueTargets" ];
+	}
 	for( var t = 0; t < targetStrList.length; t++ ) {
 		targetStr = targetStrList[ t ];
 		for( var i = 0; i < playerData[ targetStr ].length; i++ ) {
@@ -193,6 +196,9 @@ function InitPlayerData() {
 	playerData[ "blastOverride" ] = false;
 	playerData[ "blastGold" ] = true;
 	playerData[ "blastEnergy" ] = true;
+	playerData[ "specialPriority" ] = [ "energy", "gold", true ];
+	playerData[ "blastGoldAdjacent" ] = true;
+	playerData[ "blastEnergyAdjacent" ] = true;
 }
 
 function EvaluateAdjacent( c ) {
@@ -277,6 +283,18 @@ function ExampleAIPlus() {
 	attackIndex = 0;
 	playerData[ "adjacent" ] = randomize( playerData[ "adjacent" ] );
 	playerData[ "targets" ] = [];
+	playerData[ "goldTT" ] = parseFloat( plus_gold_take_time.value );
+	playerData[ "energyTT" ] = parseFloat( plus_energy_take_time.value );
+	playerData[ "normalTT" ] = parseFloat( plus_normal_take_time.value );
+	if( !( playerData[ "goldTT" ] > 3 && playerData[ "goldTT" ] < 33 ) ) {
+		playerData[ "goldTT" ] = 33;
+	}
+	if( !( playerData[ "energyTT" ] > 3 && playerData[ "energyTT" ] < 33 ) ) {
+		playerData[ "energyTT" ] = 33;
+	}
+	if( !( playerData[ "normalTT" ] > 3 && playerData[ "normalTT" ] < 33 ) ) {
+		playerData[ "normalTT" ] = 33;
+	}
 	for( var t = 0; t < playerData[ "adjacent" ].length; t++ ) {
 		if( evaluateTT( playerData[ "adjacent" ][ t ] ) ) {
 			playerData[ "targets" ].push( playerData[ "adjacent" ][ t ] );
@@ -290,6 +308,20 @@ function EvaluateBlast() {
 }
 
 function ExJayNine() {
+	playerData[ "blastGold" ] = xjgold_yes.checked;
+	playerData[ "blastEnergy" ] = xjenergy_yes.checked;
+	playerData[ "goldTT" ] = parseFloat( xj_gold_take_time.value );
+	playerData[ "energyTT" ] = parseFloat( xj_energy_take_time.value );
+	playerData[ "normalTT" ] = parseFloat( xj_normal_take_time.value );
+	if( !( playerData[ "goldTT" ] > 3 && playerData[ "goldTT" ] < 33 ) ) {
+		playerData[ "goldTT" ] = 33;
+	}
+	if( !( playerData[ "energyTT" ] > 3 && playerData[ "energyTT" ] < 33 ) ) {
+		playerData[ "energyTT" ] = 33;
+	}
+	if( !( playerData[ "normalTT" ] > 3 && playerData[ "normalTT" ] < 33 ) ) {
+		playerData[ "normalTT" ] = 33;
+	}
 	if( playerData[ "gold" ] >= 60 && playerData[ "baseNum" ] < 3 ) {
 		var newBase = playerData[ "cells" ][ Math.floor( Math.random() * playerData[ "cells" ].length ) ];
 		BuildBase( newBase[ "x" ], newBase[ "y" ] );
@@ -341,7 +373,111 @@ function ExJayNine() {
 }
 
 function Custom() {
-	PursueAccurate( [ "goldUCells", "energyUCells" ] );
+	// playerData[ "greedy" ] = false
+	// playerData[ "specialPriority" ] = [ "energy", "gold", true ]
+	playerData[ "goldTT" ] = parseFloat( custom_gold_take_time.value );
+	playerData[ "energyTT" ] = parseFloat( custom_energy_take_time.value );
+	playerData[ "normalTT" ] = parseFloat( custom_normal_take_time.value );
+	if( !( playerData[ "goldTT" ] > 3 && playerData[ "goldTT" ] < 33 ) ) {
+		playerData[ "goldTT" ] = 33;
+	}
+	if( !( playerData[ "energyTT" ] > 3 && playerData[ "energyTT" ] < 33 ) ) {
+		playerData[ "energyTT" ] = 33;
+	}
+	if( !( playerData[ "normalTT" ] > 3 && playerData[ "normalTT" ] < 33 ) ) {
+		playerData[ "normalTT" ] = 33;
+	}
+	if( playerData[ "gold" ] >= 60 && playerData[ "baseNum" ] < 3 ) {
+		var newBase = playerData[ "cells" ][ Math.floor( Math.random() * playerData[ "cells" ].length ) ];
+		BuildBase( newBase[ "x" ], newBase[ "y" ] );
+	}
+	attackIndex = 0;
+	blastIndex = 0;
+	playerData[ "targets" ] = [];
+	playerData[ "blastTargets" ] = [];
+	var t = 0;
+	for( t = 0; t < playerData[ "adjacentGold" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentGold" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentGold" ][ t ] );
+		} else if( playerData[ "blastGoldAdjacent" ] && playerData[ "adjacentGold" ][ t ][ "t" ] > 0 ) {
+			playerData[ "blastTargets" ].push( playerData[ "adjacentGold" ][ t ] );
+		}
+	}
+	for( t = 0; t < playerData[ "adjacentEnergy" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentEnergy" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentEnergy" ][ t ] );
+		} else if( playerData[ "blastEnergyAdjacent" ] && playerData[ "adjacentEnergy" ][ t ][ "t" ] > 0 ) {
+			playerData[ "blastTargets" ].push( playerData[ "adjacentEnergy" ][ t ] );
+		}
+	}
+	if( EvaluateBlast() && playerData[ "blastTargets" ].length > 0 ) {
+		playerData[ "blastTargets" ] = playerData[ "blastTargets" ].sort( function( a, b ) {
+			if( a[ "t" ] > b[ "t" ] ) {
+				return -1;
+			} else if( a[ "t" ] < b[ "t" ] ) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} );
+		Blast();
+		return;
+	}
+	if( playerData[ "targets" ].length > 0 ) {
+		console.log( "Expand!" );
+		Attack();
+		return;
+	}
+	playerData[ "pursueTargets" ] = [];
+	playerData[ "specialPriority" ][ 2 ] = true;
+	if( playerData[ playerData[ "specialPriority" ][ 0 ] + "CellNum" ] < 1 ) {
+		if( playerData[ playerData[ "specialPriority" ][ 0 ] + "UCells" ].length == 0 ) {
+			playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 0 ] + "ECells" );
+		} else {
+			playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 0 ] + "UCells" );
+		}
+		if( !playerData[ "greedy" ] ) {
+			playerData[ "specialPriority" ][ 2 ] = false;
+		}
+	}
+	if( playerData[ "specialPriority" ][ 2 ] && playerData[ playerData[ "specialPriority" ][ 1 ] + "CellNum" ] < 1 ) {
+		if( playerData[ playerData[ "specialPriority" ][ 1 ] + "UCells" ].length == 0 ) {
+			playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 1 ] + "ECells" );
+		} else {
+			playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 1 ] + "UCells" );
+		}
+	}
+	if( playerData[ "pursueTargets" ].length > 0 ) {
+		console.log( "Pursue!" );
+		Pursue();
+		return;
+	}
+	playerData[ "adjacentNormal" ] = randomize( playerData[ "adjacentNormal" ] );
+	for( t = 0; t < playerData[ "adjacentNormal" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentNormal" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentNormal" ][ t ] );
+		}
+	}
+	for( t = 0; t < playerData[ "adjacentEnemy" ].length; t++ ) {
+		if( evaluateTT( playerData[ "adjacentEnemy" ][ t ] ) ) {
+			playerData[ "targets" ].push( playerData[ "adjacentEnemy" ][ t ] );
+		}
+	}
+	if( playerData[ playerData[ "specialPriority" ][ 0 ] + "UCells" ].length == 0 ) {
+		playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 0 ] + "ECells" );
+	} else {
+		playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 0 ] + "UCells" );
+	}
+	if( playerData[ playerData[ "specialPriority" ][ 1 ] + "UCells" ].length == 0 ) {
+		playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 1 ] + "ECells" );
+	} else {
+		playerData[ "pursueTargets" ].push( playerData[ "specialPriority" ][ 1 ] + "UCells" );
+	}
+	if( Math.floor( Math.random() * 2 ) == 0 ) {
+		Pursue();
+	} else {
+		Attack();
+	}
 }
 
 /*<option value="exampleAI">ExampleAI</option>
@@ -439,16 +575,20 @@ var name_input = document.getElementById( "name_input" ),
 	framework_select = document.getElementById('framework_select');
 
 var plus_normal_take_time = document.getElementById( "plus_normal_take_time" ),
-	plus_gold_take_time = document.getElementById( "plus_normal_take_time" ),
+	plus_gold_take_time = document.getElementById( "plus_gold_take_time" ),
 	plus_energy_take_time = document.getElementById( "plus_energy_take_time" );
 
 var xj_normal_take_time = document.getElementById( "xj_normal_take_time" ),
-	xj_gold_take_time = document.getElementById( "xj_normal_take_time" ),
+	xj_gold_take_time = document.getElementById( "xj_gold_take_time" ),
 	xj_energy_take_time = document.getElementById( "xj_energy_take_time" ),
 	xjgold_yes = document.getElementById( "xjgold_yes" ),
 	xjgold_no = document.getElementById( "xjgold_no" ),
 	xjenergy_yes = document.getElementById( "xjenergy_yes" ),
 	xjenergy_no = document.getElementById( "xjenergy_no" );
+
+var custom_normal_take_time = document.getElementById( "custom_normal_take_time" ),
+	custom_gold_take_time = document.getElementById( "custom_gold_take_time" ),
+	custom_energy_take_time = document.getElementById( "custom_energy_take_time" );
 
 join_button.addEventListener( "click", function() {
 	if( name_input.value.trim() != "" ) {
