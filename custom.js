@@ -10,7 +10,7 @@ var token = "",
 	mode = "",
 	attackIndex = 0,
 	blastIndex = 0,
-	host = "http://colorfight.herokuapp.com/";
+	host = "https://colorfight.herokuapp.com/";
 
 function randomize( array ) {
     var currentIndex = array.length,
