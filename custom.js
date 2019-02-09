@@ -9,12 +9,8 @@ var token = "",
 	playerData = {},
 	mode = "",
 	attackIndex = 0,
-<<<<<<< HEAD
 	blastIndex = 0,
 	host = "https://colorfight.herokuapp.com/";
-=======
-	host = "https://colorfight.herokuapp.com/";
->>>>>>> 42f21d678908ed665ec6c681a0011f4f6223cec5
 
 function randomize( array ) {
     var currentIndex = array.length,
