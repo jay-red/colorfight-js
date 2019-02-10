@@ -1,0 +1,124 @@
+/*Custom fonts*/
+@font-face {
+    font-family: Avenir;
+    src: url("fonts/AvenirLTStd-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Avenir;
+    font-weight: bold;
+    src: url("fonts/AvenirLTStd-Black.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Produkt;
+    src: url("fonts/Produkt-Light.otf") format("opentype");
+}
+
+body {
+	margin-top: 0;
+	font-family: 'Avenir', sans-serif;
+}
+
+iframe {
+	position: fixed;
+	float: left;
+	margin-left: 35%;
+	width: 60%;
+	height: 100%;
+	border: none;
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+/*input {
+	padding-bottom: 15px;
+}*/
+
+.left {
+  float: left;
+  width: 35%;
+  padding: 0px;
+}
+
+.padded {
+  float: left;
+  padding: 20px;
+}
+
+.right {
+  float: left;
+  width: 60%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.container {
+	padding: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.logo {
+	position: fixed;
+	float: left;
+	margin-left: 35%;
+	width: 60%;
+	height: 100px;
+	background-color: #fff;
+}
+
+.input {
+	width: 200px;
+	border: 2px solid #20c997;
+	font-size: 15px;
+	font-family: "Avenir";
+	padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.input:disabled {
+	width: 200px;
+	border: 2px solid #dc3545a6;
+	font-size: 15px;
+	font-family: "Avenir";
+	padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+input[type=text], input[type=number] {
+	height: 30px;
+	text-align: center;
+  color: #34495e;
+  line-height: 1.467;
+}
+
+button {
+	margin-top: 20px;
+	height: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+	iframe {
+		display: none;
+	}
+
+	.left {
+		width: 100%;
+	}
+
+	.logo {
+		display: none;
+	}
+}
